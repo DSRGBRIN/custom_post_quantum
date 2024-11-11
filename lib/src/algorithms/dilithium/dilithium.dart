@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-
+import 'dart:math';
 import 'package:custom_post_quantum/src/algorithms/dilithium/abstractions/dilithium_private_key.dart';
 import 'package:custom_post_quantum/src/algorithms/dilithium/abstractions/dilithium_public_key.dart';
 import 'package:custom_post_quantum/src/algorithms/dilithium/abstractions/dilithium_signature.dart';
@@ -308,7 +308,18 @@ class Dilithium {
     return (pk, DilithiumPrivateKey(rho, K, tr, s1, s2, t0));
   }
 
+  Uint8List randomBytes(int length, {bool secure = false}) {
+    assert(length > 0);
 
+    final random = secure ? Random.secure() : Random();
+    final ret = Uint8List(length);
+
+    for (var i = 0; i < length; i++) {
+      ret[i] = random.nextInt(256);
+    }
+
+    return ret;
+  }
 
   /// Kyber encapsulation takes a public key and a 32-octet seed
   /// and deterministically generates a shared secret and ciphertext
